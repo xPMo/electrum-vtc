@@ -51,12 +51,8 @@ DEFAULT_PORTS = {'t':'55001', 's':'55002'}
 #then gradually switch remaining nodes to e-x nodes
 
 DEFAULT_SERVERS = {
-    'fr1.vtconline.org': DEFAULT_PORTS,
-    'uk1.vtconline.org': DEFAULT_PORTS,
-    'vtc.horriblecoders.com': DEFAULT_PORTS,
-    'vtc.lukechilds.co': DEFAULT_PORTS,
-    'vtc-cce-1.coinomi.net': {'t':'5028'},
-    'vtc-cce-2.coinomi.net': {'t':'5028'},
+    'k3ivz7g5xc24u6d2.onion': DEFAULT_PORTS,
+    'qlumx6hsr5pk42gz.onion': DEFAULT_PORTS,
 }
 
 '''
@@ -240,7 +236,9 @@ class Network(util.DaemonThread):
         self.auto_connect = self.config.get('auto_connect', True)
         self.connecting = set()
         self.socket_queue = Queue.Queue()
-        self.start_network(deserialize_server(self.default_server)[2],
+        if self.config.get('proxy') == None:
+            self.config.set_key('proxy', 'socks5:localhost:9150')
+	self.start_network(deserialize_server(self.default_server)[2],
                            deserialize_proxy(self.config.get('proxy')))
 
     def register_callback(self, callback, events):
